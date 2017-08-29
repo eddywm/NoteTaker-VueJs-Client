@@ -8,7 +8,7 @@ import CreateNote from '@/components/Notes/CreateNote.vue'
 import Profile from '@/components/Users/Profile.vue'
 import SignIn from '@/components/Users/SignIn.vue'
 import SignUp from '@/components/Users/SignUp.vue'
-
+import AuthGuard from './auth-gard'
 Vue.use(Router)
 
 export default new Router({
@@ -34,13 +34,15 @@ export default new Router({
     {
       path: '/note/new',
       name: 'CreateNote',
-      component: CreateNote
+      component: CreateNote,
+      beforeEnter: AuthGuard
     },
 
     {
       path: '/profile',
       name: 'Profile',
-      component: Profile
+      component: Profile,
+      beforeEnter: AuthGuard
     },
 
     {

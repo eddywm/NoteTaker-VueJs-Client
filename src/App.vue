@@ -41,14 +41,28 @@
   export default {
     data: function () {
       return {
-        sideNav: false,
-        menuItems: [
-          {icon: 'event_note', title: 'Notes', link: '/notes'},
+        sideNav: false
+      }
+    },
+    computed: {
+      menuItems () {
+        let menuItems = [
           {icon: 'lock', title: 'Sign In', link: '/sign-in'},
-          {icon: 'supervisor_account', title: 'Sign Up', link: '/sign-up'},
-          {icon: 'note_add', title: 'New Note', link: '/note/new'},
-          {icon: 'account_circle', title: 'Eddy WM', link: '/profile'}
+          {icon: 'supervisor_account', title: 'Sign Up', link: '/sign-up'}
+
         ]
+        if (this.userIsAuthenticated) {
+          menuItems = [
+            {icon: 'event_note', title: 'Notes', link: '/notes'},
+            {icon: 'note_add', title: 'New Note', link: '/note/new'},
+            {icon: 'account_circle', title: this.$store.getters.user.name, link: '/profile'}
+          ]
+        }
+
+        return menuItems
+      },
+      userIsAuthenticated () {
+        return this.$store.getters.user !== null && this.$store.getters.user !== undefined
       }
     }
   }

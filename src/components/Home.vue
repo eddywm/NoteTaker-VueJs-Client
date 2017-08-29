@@ -9,7 +9,18 @@
       </v-flex>
     </v-layout>
 
-    <v-layout class="mb-2">
+    <v-layout>
+      <v-flex xs12 class="text-xs-center">
+        <v-progress-circular
+          indeterminate
+          class="primary--text"
+          v-if="loading">
+
+        </v-progress-circular>
+      </v-flex>
+    </v-layout>
+
+    <v-layout class="mb-2" v-if="!loading">
       <v-flex xs12>
         <v-carousel style="cursor: pointer">
           <v-carousel-item v-for="note in notes " :src="note.imageUrl" :key="note.id"
@@ -36,6 +47,9 @@
     computed: {
       notes () {
         return this.$store.getters.loadedNotes
+      },
+      loading () {
+        return this.$store.getters.loading
       }
     },
     methods: {

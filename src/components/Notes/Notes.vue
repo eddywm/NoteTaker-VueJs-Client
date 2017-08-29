@@ -14,7 +14,8 @@
                     <v-card-title primary-title>
                       <div>
                         <h5 class="mb-0  white--text note-title">{{ note.title }}</h5>
-                        <div class="note-title">{{ note.reminderDate | date }}</div>
+                        <!--<div class="note-title">{{ note.reminderDate | date }}</div>-->
+                        <div class="note-title">{{ note.reminderDate }}</div>
                       </div>
 
                     </v-card-title>
