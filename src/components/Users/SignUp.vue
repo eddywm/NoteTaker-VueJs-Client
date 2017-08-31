@@ -133,7 +133,7 @@
 
 <style scoped>
   .custom-text {
-    font-family: Helvetica, Rambla, Raleway, Roboto, sans-serif;
+    /*font-family: Helvetica, Rambla, Raleway, Roboto, sans-serif;*/
     /*font-weight: bold;*/
     font-size: 16px;
   }

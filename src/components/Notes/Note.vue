@@ -7,6 +7,7 @@
             <h5 class="card-title white--text">{{ note.title }}</h5>
           </v-card-title>
           <v-card-media :src="note.imageUrl" height="300px">
+          <!-- <img :src="note.imageUrl"> -->
           </v-card-media>
           <v-card-text class="grey lighten-2">
             <div class="info--text">{{ note.reminderDate | date }}</div>

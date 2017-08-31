@@ -1,12 +1,13 @@
 <template>
   <v-container>
     <v-layout row wrap v-for="note in notes" :key="note.id" class="mb-2">
-      <v-flex xs12 sm10 md8 offset-sm1 offset-md2>
+      <v-flex xs12 sm10 offset-sm1>
           <v-card class="indigo lighten-3">
             <v-container fluid>
               <v-layout row>
                   <v-flex xs5 sm4 md3>
-                    <v-card-media :src="note.imageUrl" height="140px">
+                    <v-card-media :src="note.imageUrl" height="150px">
+                    <!-- <img :src="note.imageUrl"> -->
                     </v-card-media>
                   </v-flex>
 
@@ -14,13 +15,18 @@
                     <v-card-title primary-title>
                       <div>
                         <h5 class="mb-0  white--text note-title">{{ note.title }}</h5>
-                        <!--<div class="note-title">{{ note.reminderDate | date }}</div>-->
-                        <div class="note-title">{{ note.reminderDate }}</div>
+                       <!--  {{ note.imageUrl }} -->
+
+                        <div class="note-title">{{ note.reminderDate | date }}</div>
+                        <!-- <div class="note-title">{{ note.reminderDate }}</div> -->
                       </div>
 
                     </v-card-title>
 
+
+
                     <v-card-actions>
+
                       <div>
                         <v-btn :to="'/notes/'+ note.id" class="note-title">
                           <v-icon left>arrow_forward</v-icon>

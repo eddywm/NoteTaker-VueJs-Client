@@ -1,14 +1,16 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import Axios from 'axios'
-import { BASE_URL, TIME_OUT_PERIOD, TOKEN } from '../http/http-common'
+import { BASE_URL, TIME_OUT_PERIOD } from '../http/http-common'
 
 Vue.use(Vuex)
 
 let http = Axios.create({
   baseURL: BASE_URL,
   timeout: TIME_OUT_PERIOD,
-  headers: {'Authorization': 'BEARER ' + TOKEN}
+  headers: {
+    'Authorization': 'BEARER ' + localStorage.getItem('auth-token')
+  }
 })
 
 export const store = new Vuex.Store({
@@ -82,7 +84,7 @@ export const store = new Vuex.Store({
         .then(response => {
           let notesFromServer = response.data.notes
           commit('setLoadedNotes', notesFromServer)
-          console.log(notesFromServer)
+          // console.log(notesFromServer)
           commit('setLoading', false)
         })
         .catch(e => {
@@ -90,24 +92,33 @@ export const store = new Vuex.Store({
           commit('setLoading', false)
         })
     },
-    createNote ({ commit }, payload) {
-      const note = {
-        title: payload.title,
-        body: payload.body,
-        imageUrl: payload.imageUrl,
-        reminderDate: payload.reminderDate
+    createNote ({ commit }, formData) {
+      const config = {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
       }
-      console.log(note)
-      http.post('/notes', note)
+      http.post('/notes', formData, config)
         .then(response => {
-          console.log(response.data)
-          commit('createNote', {
-            ...note,
-            id: response.data.note.slug
-          })
+          console.log(response)
+
+          const note = {
+            title: response.data.note.title,
+            body: response.data.note.body,
+            imageUrl: response.data.note.imageUrl,
+            reminderDate: response.data.note.reminderDate
+          }
+
+          console.log(note)
+          commit('createNote', note)
         })
         .catch(e => {
-          console.log(e.response.data)
+          let error = e.response.data.errors
+          // let error = e.response.data.errors
+          console.log(error)
+          error.forEach(function (element) {
+            commit('setError', element)
+          })
         })
     },
     signUpUser ({ commit }, payload) {
@@ -132,12 +143,16 @@ export const store = new Vuex.Store({
          localStorage.setItem('auth-token-exp', response.data.auth.token_exp)
          localStorage.setItem('auth-refresher-exp', response.data.auth.refresher_exp)
          localStorage.setItem('auth-user-id', response.data.user.slug)
+         // localStorage.setItem('auth-user-name', response.data.user.name)
+         // localStorage.setItem('auth-user-email', response.data.user.email)
          console.log(response.data)
        })
         .catch(e => {
           let error = e.response.data.errors
+          error.forEach(function (element) {
+            commit('setError', element)
+          })
           commit('setLoading', false)
-          commit('setError', error)
           console.log(error)
         })
     },
@@ -163,7 +178,8 @@ export const store = new Vuex.Store({
           localStorage.setItem('auth-token', response.data.auth.token)
           localStorage.setItem('auth-token-exp', response.data.auth.token_exp)
           localStorage.setItem('auth-refresher-exp', response.data.auth.refresher_exp)
-          console.log(response.data.error)
+          localStorage.setItem('auth-user-id', response.data.user.slug)
+          console.log(response.data)
         })
         .catch(e => {
           let error = e.response.data.error
@@ -172,7 +188,16 @@ export const store = new Vuex.Store({
           console.log(error)
         })
     },
-
+    autoSignIn ({ commit }, payload) {
+      commit('setUser', {id: payload.id, registeredNotes: []})
+    },
+    logout ({ commit }) {
+      localStorage.setItem('auth-token', null)
+      localStorage.setItem('auth-token-exp', null)
+      localStorage.setItem('auth-refresher-exp', null)
+      localStorage.setItem('auth-user-id', null)
+      commit('setUser', null)
+    },
     clearError ({ commit }) {
       commit('clearError')
     }

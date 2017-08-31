@@ -6,6 +6,12 @@
       </v-flex>
     </v-layout>
 
+    <v-layout row v-if="error" v-for="(e, index) in error" :key="index">
+      <v-flex xs12 sm6 offset-sm3>
+        <app-alert @dismissed="onDismissed" :text="e"></app-alert>
+      </v-flex>
+    </v-layout>
+
     <v-layout row>
       <v-flex xs12>
         <form @submit.prevent="onCreateNote">
@@ -37,13 +43,20 @@
 
           <v-layout row>
             <v-flex xs12 sm6 offset-sm3>
-              <v-text-field
-                name="imageUrl"
-                label="Upload Image"
-                id="imageUrl"
-                v-model="imageUrl"
-                required>
-              </v-text-field>
+              <v-btn raised @click="onPickFile">Upload Image</v-btn>
+              <input
+                type="file"
+                style="display: none"
+                ref="fileInput"
+                accept="image/*"
+                id="imageUpload"
+                @change="onFilePicked">
+            </v-flex>
+          </v-layout>
+
+           <v-layout row>
+            <v-flex xs12 sm6 offset-sm3>
+              <img :src="imageUrl" alt="" height="150">
             </v-flex>
           </v-layout>
 
@@ -65,11 +78,7 @@
             </v-flex>
           </v-layout>
 
-          <v-layout row>
-            <v-flex xs12 sm6 offset-sm3>
-              <img :src="imageUrl" alt="" height="150">
-            </v-flex>
-          </v-layout>
+
 
           <v-layout row>
             <v-flex xs12 sm6 offset-sm3>
@@ -92,7 +101,8 @@
         body: '',
         imageUrl: '',
         date: new Date(),
-        time: new Date()
+        time: new Date(),
+        image: null
       }
     },
 
@@ -114,6 +124,9 @@
           date.setMinutes(this.time.getMinutes())
         }
         return date
+      },
+      error () {
+        return this.$store.getters.error
       }
     },
     methods: {
@@ -121,14 +134,43 @@
         if (this.invalidForm) {
           return
         }
-        const noteData = {
-          title: this.title,
-          body: this.body,
-          imageUrl: this.imageUrl,
-          reminderDate: this.submittableDateTime
+        if (!this.image) {
+          return
         }
-        this.$store.dispatch('createNote', noteData)
+        let formData = new FormData()
+        formData.append('title', this.title)
+        formData.append('body', this.body)
+        formData.append('imageUrl', this.image)
+        formData.append('reminderDate', this.submittableDateTime)
+        this.$store.dispatch('createNote', formData)
         this.$router.push('/notes')
+      },
+
+      onDismissed: function () {
+        this.$store.dispatch('clearError')
+      },
+
+      onPickFile () {
+        this.$refs.fileInput.click()
+      },
+
+      onFilePicked (event) {
+        const files = event.target.files
+        const fileReader = new FileReader()
+        fileReader.addEventListener('load', () => {
+          this.imageUrl = fileReader.result
+        })
+        fileReader.readAsDataURL(files[0])
+        this.image = files[0]
+      }
+    },
+
+    watch: {
+      error (value) {
+        if (value.length === 0) {
+          console.log('Error Value', value)
+          this.$router.push('/notes')
+        }
       }
     }
   }
@@ -136,6 +178,6 @@
 
 <style scoped>
  .container-custom{
-   font-family: Roboto, sans-serif;
+   /*font-family: Roboto, sans-serif;*/
  }
 </style>

@@ -19,6 +19,13 @@ new Vue({
   render: h => h(App),
   created () {
     this.$store.dispatch('loadNotes')
+    let now = Math.floor((new Date()).getTime() / 1000)
+    if (now < localStorage.getItem('auth-token-exp')) {
+      let user = {
+        id: localStorage.getItem('auth-user-id')
+      }
+      this.$store.dispatch('autoSignIn', user)
+    }
   }
 
 })
