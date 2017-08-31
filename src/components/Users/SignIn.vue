@@ -17,7 +17,7 @@
           </v-card-title>
           <v-card-text>
             <v-container>
-              
+
 
                 <v-layout row>
                   <v-flex xs12>
@@ -44,18 +44,18 @@
                     </v-text-field>
                   </v-flex>
                 </v-layout>
-                
-              
+
+
             </v-container>
           </v-card-text>
 
           <v-card-title class="blue lighten-1">
-                      
-                       <v-btn 
-                       type="submit" 
-                       style="font-size:20px; font-weight: bold" 
-                       class="red white--text" 
-                       :disabled="loading" 
+
+                       <v-btn
+                       type="submit"
+                       style="font-size:20px; font-weight: bold"
+                       class="red white--text"
+                       :disabled="loading"
                        :loading="loading">
                             Sign In
                             <span slot="loader" class="custom-loader">
@@ -64,7 +64,7 @@
                         </v-btn>
 
           </v-card-title>
-          </form>    
+          </form>
         </v-card>
       </v-flex>
     </v-layout>
@@ -108,7 +108,6 @@
         })
       },
       onDismissed: function () {
-        console.log('Dismissed Alert !')
         this.$store.dispatch('clearError')
       }
     }

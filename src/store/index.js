@@ -74,7 +74,7 @@ export const store = new Vuex.Store({
       state.error.push(payload)
     },
     clearError (state) {
-      state.error = []
+      state.error.pop()
     }
   },
   actions: {
@@ -192,11 +192,12 @@ export const store = new Vuex.Store({
       commit('setUser', {id: payload.id, registeredNotes: []})
     },
     logout ({ commit }) {
-      localStorage.setItem('auth-token', null)
-      localStorage.setItem('auth-token-exp', null)
-      localStorage.setItem('auth-refresher-exp', null)
-      localStorage.setItem('auth-user-id', null)
+      localStorage.removeItem('auth-token')
+      localStorage.removeItem('auth-token-exp')
+      localStorage.removeItem('auth-refresher-exp')
+      localStorage.removeItem('auth-user-id')
       commit('setUser', null)
+      // this.$router.push('/sign-in')
     },
     clearError ({ commit }) {
       commit('clearError')

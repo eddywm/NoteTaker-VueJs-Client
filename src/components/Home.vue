@@ -52,6 +52,10 @@
         return this.$store.getters.loading
       }
     },
+    created () {
+    // fetch the data when the view is created
+      this.$store.dispatch('loadNotes')
+    },
     methods: {
       onLoadNote: function (id) {
         this.$router.push('/notes/' + id)

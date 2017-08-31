@@ -50,6 +50,10 @@
       notes: function () {
         return this.$store.getters.loadedNotes
       }
+    },
+    mounted () {
+    // fetch the data when the view is created and the data is
+      this.$store.dispatch('loadNotes')
     }
   }
 </script>

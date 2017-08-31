@@ -25,6 +25,8 @@ new Vue({
         id: localStorage.getItem('auth-user-id')
       }
       this.$store.dispatch('autoSignIn', user)
+    } else {
+      this.$router.push('/sign-in')
     }
   }
 
